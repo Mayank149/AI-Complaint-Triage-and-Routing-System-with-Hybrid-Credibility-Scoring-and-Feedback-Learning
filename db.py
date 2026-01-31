@@ -1,5 +1,7 @@
 import sqlite3
-from datetime import datetime
+from datetime import datetime, timezone, timedelta
+
+IST = timezone(timedelta(hours = 5, minutes = 30))
 
 DB_NAME = "complaints.db"
 
@@ -49,12 +51,12 @@ def insert_complaint(text, predicted_department, department_confidence, predicte
             predicted_urgency,
             urgency_confidence,
             credibility_score,
-            datetime.utcnow().isoformat()
+            datetime.now(IST).isoformat()
         )
     )
     conn.commit()
     conn.close()
-    
+
 
 
 if __name__ == "__main__":

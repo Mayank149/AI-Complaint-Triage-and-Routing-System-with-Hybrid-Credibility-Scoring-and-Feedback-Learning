@@ -4,9 +4,12 @@ from flask_cors import CORS
 from inference import predict_complaint
 from credibility import compute_rule_credibility
 from questions import generate_followup_questions
+from db import init_db, insert_complaint
 
 app = Flask(__name__)
 CORS(app)
+
+init_db()
 
 CREDIBILITY_THRESHOLD = 60
 
@@ -35,6 +38,15 @@ def analyze_complaint():
             "credibility_score" : credibility_score,
             "followup_questions" : followup_questions
         }
+        
+        insert_complaint(
+            text = text,
+            predicted_department = inference_result["department"],
+            department_confidence = inference_result["department_confidence"],
+            predicted_urgency = inference_result["urgency"],
+            urgency_confidence = inference_result["urgency_confidence"],
+            credibility_score = credibility_score
+        )
 
         return jsonify(response)
     

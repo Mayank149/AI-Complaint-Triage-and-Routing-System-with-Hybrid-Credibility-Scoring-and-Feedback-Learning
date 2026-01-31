@@ -5,7 +5,12 @@ def has_time_reference(text):
         r"\b\d{1,2}:\d{2}\b",
         r"\b(today|yesterday|tomorrow)\b",
         r"\b(morning|evening|night)\b",
-        r"\b\d{1,2}[/-]\d{1,2}[/-]\d{2,4}\b"
+        r"\b\d{1,2}[/-]\d{1,2}[/-]\d{2,4}\b",
+        r"\b(jan|feb|mar|apr|may|jun|jul|aug|sep|oct|nov|dec)\b",
+        r"\b(january|february|march|april|may|june|july|august|september|october|november|december)\b",
+        r"\b\d{4}\b",
+        r"\b\d{1,2}\s+(?:minutes?|hours?|days?|weeks?|months?|years?)\s+ago\b",
+        r"\b\d{1,2}\s+(?:minutes?|hours?|days?|weeks?|months?|years?)\s+from\s+now\b"
     ]
     return any(re.search(p, text, re.IGNORECASE) for p in patterns)
 

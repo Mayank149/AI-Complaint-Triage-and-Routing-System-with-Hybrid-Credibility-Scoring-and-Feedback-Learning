@@ -50,8 +50,6 @@ def predict_complaint(text):
     }
 
 if __name__ == "__main__":
-    print("Department model loaded:", type(department_pipeline))
-    print("Urgency model loaded:", type(urgency_pipeline))
 
     sample_text = (
         "VPN keeps disconnecting during remote work. "

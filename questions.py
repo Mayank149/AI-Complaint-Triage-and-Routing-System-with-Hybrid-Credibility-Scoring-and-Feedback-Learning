@@ -29,7 +29,7 @@ ELABORATION_QUESTIONS = [
 IDENTIFIER_QUESTIONS = [
     "Do you have any relevant ID, ticket number, or reference number?",
     "Please provide any associated ID or reference number if available.",
-    "Is there a ticket number, roll number, or transaction ID related to this?",
+    "Is there a ticket number, registration number, or transaction ID related to this?",
     "Can you share any identifier that can help us track this issue?"
 ]
 

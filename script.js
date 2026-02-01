@@ -133,6 +133,22 @@ document.addEventListener('DOMContentLoaded', () => {
         submitFeedbackBtn.disabled = true;
         submitFeedbackBtn.textContent = 'Submitting...';
 
+        // If both are correct, skip the API call
+        if (feedbackState.deptCorrect && feedbackState.urgencyCorrect) {
+            // Lock the input parts (disable buttons and select)
+            feedbackBtns.forEach(btn => btn.disabled = true);
+            correctDeptSelect.disabled = true;
+            correctUrgencySelect.disabled = true;
+
+            // Hide the submit button
+            submitFeedbackBtn.parentElement.classList.add('hidden');
+
+            // Show success
+            feedbackSuccess.classList.remove('hidden');
+            feedbackSuccess.textContent = "Thanks for the feedback";
+            return;
+        }
+
         try {
             const response = await fetch('http://127.0.0.1:5000/feedback', {
                 method: 'POST',

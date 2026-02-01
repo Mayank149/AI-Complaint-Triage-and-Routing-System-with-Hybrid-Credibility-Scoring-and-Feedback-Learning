@@ -25,6 +25,18 @@ def init_db():
         )
     """)
 
+    cursor.execute("""
+        CREATE TABLE IF NOT EXISTS feedback (
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            complaint_id INTEGER,
+            predicted_department TEXT,
+            correct_department TEXT,
+            predicted_urgency TEXT,
+            correct_urgency TEXT,
+            timestamp TEXT    
+        )
+    """)
+
     conn.commit()
     conn.close()
 
@@ -54,10 +66,38 @@ def insert_complaint(text, predicted_department, department_confidence, predicte
             datetime.now(IST).isoformat()
         )
     )
+    complaint_id = cursor.lastrowid
     conn.commit()
     conn.close()
 
+    return complaint_id
 
+def insert_feedback(complaint_id, predicted_department, correct_department, predicted_urgency, correct_urgency):
+    conn = get_connection()
+    cursor = conn.cursor()
+
+    cursor.execute("""
+        INSERT INTO feedback (
+            complaint_id,
+            predicted_department,
+            correct_department,
+            predicted_urgency,
+            correct_urgency,
+            timestamp
+        )
+        VALUES (?, ?, ?, ?, ?, ?)
+        """,
+        (
+            complaint_id,
+            predicted_department,
+            correct_department,
+            predicted_urgency,
+            correct_urgency,
+            datetime.now(IST).isoformat()
+        )
+    )
+    conn.commit()
+    conn.close()
 
 if __name__ == "__main__":
     init_db()

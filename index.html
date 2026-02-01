@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI Complaint Triage & Routing System</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+</head>
+
+<body>
+
+    <header class="main-header">
+        <div class="container">
+            <h1>AI Complaint Triage & Routing System</h1>
+            <p class="subtitle">Automated classification and routing for institutional efficiency</p>
+        </div>
+    </header>
+
+    <main class="container">
+
+        <!-- Complaint Submission Section -->
+        <section id="submission-section" class="card">
+            <div class="section-header">
+                <h2>Submit a Complaint</h2>
+            </div>
+            <div class="form-group">
+                <label for="complaint-text" class="sr-only">Complaint Description</label>
+                <textarea id="complaint-text" placeholder="Describe your issue in detail..." rows="6"></textarea>
+                <p class="helper-text">
+                    For best results, please include specific details such as location, time, and any error messages.
+                    <span id="char-count">0 characters (minimal 20 required)</span>
+                </p>
+            </div>
+            <div class="form-actions">
+                <button id="analyze-btn" class="btn primary" type="button" disabled>Analyze Complaint</button>
+            </div>
+            <div id="loading-indicator" class="hidden">
+                <span class="spinner"></span> Analyzing...
+            </div>
+            <div id="error-message" class="alert error hidden"></div>
+        </section>
+
+        <!-- Analysis Results Section (Hidden by default) -->
+        <section id="results-section" class="hidden fade-in">
+            <div class="results-grid">
+                <!-- Department Card -->
+                <div class="result-card">
+                    <h3>Predicted Department</h3>
+                    <div class="result-value" id="dept-value">--</div>
+                    <div class="result-meta">Confidence: <span id="dept-confidence">--</span>%</div>
+                </div>
+
+                <!-- Urgency Card -->
+                <div class="result-card">
+                    <h3>Urgency Level</h3>
+                    <div class="result-value" id="urgency-value">--</div>
+                    <div class="result-meta">Confidence: <span id="urgency-confidence">--</span>%</div>
+                </div>
+
+                <!-- Credibility Card -->
+                <div class="result-card">
+                    <h3>Credibility Score</h3>
+                    <div class="result-value" id="credibility-value">--</div>
+                    <div class="result-bar-bg">
+                        <div id="credibility-bar" class="result-bar-fill" style="width: 0%"></div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Follow-up Questions (Conditional) -->
+            <div id="followup-container" class="info-box hidden">
+                <h4>Additional Information Required</h4>
+                <p>The system has identified missing details. Please consider adding the following:</p>
+                <ul id="followup-list"></ul>
+            </div>
+        </section>
+
+        <!-- Feedback Section (Hidden by default) -->
+        <section id="feedback-section" class="card hidden fade-in">
+            <div class="section-header">
+                <h2>System Feedback</h2>
+                <p>Help us improve by verifying the analysis.</p>
+            </div>
+
+            <div class="feedback-grid">
+                <!-- Department Feedback -->
+                <div class="feedback-item">
+                    <p class="label">Is the <strong>Department</strong> correct?</p>
+                    <div class="btn-group">
+                        <button class="btn outline feedback-btn" data-type="dept" data-value="yes">Yes</button>
+                        <button class="btn outline feedback-btn" data-type="dept" data-value="no">No</button>
+                    </div>
+                    <div id="dept-correction" class="correction-input hidden">
+                        <label for="correct-dept">Select Correct Department:</label>
+                        <select id="correct-dept">
+                            <option value="" disabled selected>Select...</option>
+                            <!-- Options populated via JS or static -->
+                            <option value="IT Support">IT Support</option>
+                            <option value="Maintenance">Maintenance</option>
+                            <option value="Housekeeping">Housekeeping</option>
+                            <option value="Administration">Administration</option>
+                            <option value="Security">Security</option>
+                            <option value="Wifi">Wifi</option>
+                            <option value="Electrical">Electrical</option>
+                            <option value="Other">Other</option>
+                        </select>
+                    </div>
+                </div>
+
+                <!-- Urgency Feedback -->
+                <div class="feedback-item">
+                    <p class="label">Is the <strong>Urgency</strong> correct?</p>
+                    <div class="btn-group">
+                        <button class="btn outline feedback-btn" data-type="urgency" data-value="yes">Yes</button>
+                        <button class="btn outline feedback-btn" data-type="urgency" data-value="no">No</button>
+                    </div>
+                    <div id="urgency-correction" class="correction-input hidden">
+                        <label for="correct-urgency">Select Correct Urgency:</label>
+                        <select id="correct-urgency">
+                            <option value="" disabled selected>Select...</option>
+                            <option value="Low">Low</option>
+                            <option value="Medium">Medium</option>
+                            <option value="High">High</option>
+                            <option value="Critical">Critical</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+
+            <div class="form-actions">
+                <button id="submit-feedback-btn" class="btn secondary" disabled>Submit Feedback</button>
+            </div>
+            <div id="feedback-success" class="alert success hidden">Thank you! Your feedback has been recorded.</div>
+        </section>
+
+    </main>
+
+    <footer class="main-footer">
+        <div class="container">
+            <p>&copy; 2024 AI Complaint Triage System. Internal use only.</p>
+        </div>
+    </footer>
+
+    <script src="script.js"></script>
+</body>
+
+</html>

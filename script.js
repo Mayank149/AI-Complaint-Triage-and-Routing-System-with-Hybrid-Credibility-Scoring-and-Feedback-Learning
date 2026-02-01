@@ -141,11 +141,15 @@ document.addEventListener('DOMContentLoaded', () => {
             });
 
             if (response.ok) {
+                // Hide the input parts
+                document.querySelector('.feedback-grid').classList.add('hidden');
+                submitFeedbackBtn.parentElement.classList.add('hidden'); // Hide the button container
+                document.querySelector('.section-header > p').classList.add('hidden'); // Hide the subtitle
+
+                // Show success
                 feedbackSuccess.classList.remove('hidden');
-                // Disable everything
-                feedbackBtns.forEach(b => b.disabled = true);
-                correctDeptSelect.disabled = true;
-                correctUrgencySelect.disabled = true;
+                feedbackSuccess.textContent = "Thanks for the feedback";
+
             } else {
                 showError("Failed to submit feedback.");
             }

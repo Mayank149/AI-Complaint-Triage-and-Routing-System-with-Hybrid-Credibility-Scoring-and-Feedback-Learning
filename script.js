@@ -141,10 +141,13 @@ document.addEventListener('DOMContentLoaded', () => {
             });
 
             if (response.ok) {
-                // Hide the input parts
-                document.querySelector('.feedback-grid').classList.add('hidden');
-                submitFeedbackBtn.parentElement.classList.add('hidden'); // Hide the button container
-                document.querySelector('.section-header > p').classList.add('hidden'); // Hide the subtitle
+                // Lock the input parts (disable buttons and select)
+                feedbackBtns.forEach(btn => btn.disabled = true);
+                correctDeptSelect.disabled = true;
+                correctUrgencySelect.disabled = true;
+
+                // Hide the submit button
+                submitFeedbackBtn.parentElement.classList.add('hidden');
 
                 // Show success
                 feedbackSuccess.classList.remove('hidden');
@@ -210,6 +213,12 @@ document.addEventListener('DOMContentLoaded', () => {
         resultsSection.classList.add('hidden');
         feedbackSection.classList.add('hidden');
         feedbackSuccess.classList.add('hidden');
+
+        // Restore feedback section visibility for next run
+        // We no longer hide them, but we need to ensure they are enabled
+        correctDeptSelect.disabled = false;
+        correctUrgencySelect.disabled = false;
+        submitFeedbackBtn.parentElement.classList.remove('hidden');
 
         // Reset feedback state
         feedbackState = { deptCorrect: null, urgencyCorrect: null };

@@ -17,6 +17,7 @@
         <div class="container">
             <h1>AI Complaint Triage & Routing System</h1>
             <p class="subtitle">Automated classification and routing for institutional efficiency</p>
+            <button id="admin-btn" class="admin-btn" title="Admin Panel">🔐</button>
         </div>
     </header>
 
@@ -139,6 +140,80 @@
         </section>
 
     </main>
+
+    <!-- Password Authentication Modal -->
+    <div id="password-modal" class="modal hidden">
+        <div class="modal-overlay"></div>
+        <div class="modal-content password-modal-content">
+            <button class="modal-close" id="password-modal-close">&times;</button>
+            <h2>Admin Authentication</h2>
+            <p>Enter admin password to access the database</p>
+            <form id="password-form">
+                <input type="password" id="admin-password" placeholder="Enter password" required>
+                <div id="password-error" class="error-text hidden">Invalid password</div>
+                <button type="submit" class="btn primary">Authenticate</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Admin Panel Modal -->
+    <div id="admin-panel-modal" class="modal hidden">
+        <div class="modal-overlay"></div>
+        <div class="modal-content admin-panel-content">
+            <button class="modal-close" id="admin-panel-close">&times;</button>
+            <h2>Admin Panel - Database Viewer</h2>
+
+            <div class="admin-tabs">
+                <button class="tab-btn active" data-tab="complaints">Complaints Table</button>
+                <button class="tab-btn" data-tab="feedback">Feedback Table</button>
+            </div>
+
+            <div id="complaints-tab" class="tab-content active">
+                <h3>Complaints</h3>
+                <div class="table-container">
+                    <table id="complaints-table">
+                        <thead>
+                            <tr>
+                                <th>ID</th>
+                                <th>Text</th>
+                                <th>Department</th>
+                                <th>Dept Conf</th>
+                                <th>Urgency</th>
+                                <th>Urg Conf</th>
+                                <th>Credibility</th>
+                                <th>Timestamp</th>
+                            </tr>
+                        </thead>
+                        <tbody id="complaints-tbody">
+                            <!-- Data populated by JavaScript -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <div id="feedback-tab" class="tab-content">
+                <h3>Feedback</h3>
+                <div class="table-container">
+                    <table id="feedback-table">
+                        <thead>
+                            <tr>
+                                <th>ID</th>
+                                <th>Complaint ID</th>
+                                <th>Predicted Dept</th>
+                                <th>Correct Dept</th>
+                                <th>Predicted Urg</th>
+                                <th>Correct Urg</th>
+                                <th>Timestamp</th>
+                            </tr>
+                        </thead>
+                        <tbody id="feedback-tbody">
+                            <!-- Data populated by JavaScript -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
 
     <footer class="main-footer">
         <div class="container">

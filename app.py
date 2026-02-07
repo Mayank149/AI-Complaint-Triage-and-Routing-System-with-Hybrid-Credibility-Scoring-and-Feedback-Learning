@@ -4,7 +4,7 @@ from flask_cors import CORS
 from inference import predict_complaint
 from credibility import compute_rule_credibility, compute_hybrid_credibility
 from questions import generate_followup_questions
-from db import init_db, insert_complaint, insert_feedback
+from db import init_db, insert_complaint, insert_feedback, get_all_complaints, get_all_feedback
 
 app = Flask(__name__)
 CORS(app)
@@ -82,6 +82,31 @@ def submit_feedback():
     except Exception as e:
         return jsonify({"error" : str(e)}), 500
 
+@app.route("/admin/authenticate", methods=["POST"])
+def admin_authenticate():
+    data = request.get_json()
+    if not data or "password" not in data:
+        return jsonify({"error": "Missing password"}), 400
+    
+    ADMIN_PASSWORD = "admin123"
+    
+    if data["password"] == ADMIN_PASSWORD:
+        return jsonify({"authenticated": True})
+    else:
+        return jsonify({"authenticated": False, "error": "Invalid password"}), 401
+
+@app.route("/admin/database", methods=["GET"])
+def get_database():
+    try:
+        complaints = get_all_complaints()
+        feedback = get_all_feedback()
+        
+        return jsonify({
+            "complaints": complaints,
+            "feedback": feedback
+        })
+    except Exception as e:
+        return jsonify({"error": str(e)}), 500
 
 if __name__ == "__main__":
     app.run(debug=True)

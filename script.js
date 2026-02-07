@@ -270,4 +270,187 @@ document.addEventListener('DOMContentLoaded', () => {
         errorMessage.textContent = msg;
         errorMessage.classList.remove('hidden');
     }
+
+    // --- Admin Panel Functionality ---
+
+    const adminBtn = document.getElementById('admin-btn');
+    const passwordModal = document.getElementById('password-modal');
+    const adminPanelModal = document.getElementById('admin-panel-modal');
+    const passwordForm = document.getElementById('password-form');
+    const adminPassword = document.getElementById('admin-password');
+    const passwordError = document.getElementById('password-error');
+    const passwordModalClose = document.getElementById('password-modal-close');
+    const adminPanelClose = document.getElementById('admin-panel-close');
+    const tabBtns = document.querySelectorAll('.tab-btn');
+    const complaintsTab = document.getElementById('complaints-tab');
+    const feedbackTab = document.getElementById('feedback-tab');
+
+    // Open password modal when admin button is clicked
+    adminBtn.addEventListener('click', () => {
+        passwordModal.classList.remove('hidden');
+        adminPassword.value = '';
+        passwordError.classList.add('hidden');
+        adminPassword.focus();
+    });
+
+    // Close password modal
+    passwordModalClose.addEventListener('click', () => {
+        passwordModal.classList.add('hidden');
+    });
+
+    // Close admin panel modal
+    adminPanelClose.addEventListener('click', () => {
+        adminPanelModal.classList.add('hidden');
+    });
+
+    // Close modals when clicking on overlay
+    document.querySelectorAll('.modal-overlay').forEach(overlay => {
+        overlay.addEventListener('click', () => {
+            passwordModal.classList.add('hidden');
+            adminPanelModal.classList.add('hidden');
+        });
+    });
+
+    // Handle password form submission
+    passwordForm.addEventListener('submit', async (e) => {
+        e.preventDefault();
+        const password = adminPassword.value;
+
+        try {
+            const response = await fetch('http://127.0.0.1:5000/admin/authenticate', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ password: password })
+            });
+
+            const data = await response.json();
+
+            if (data.authenticated) {
+                // Close password modal
+                passwordModal.classList.add('hidden');
+
+                // Fetch and display database data
+                await loadDatabaseData();
+
+                // Show admin panel
+                adminPanelModal.classList.remove('hidden');
+            } else {
+                // Show error
+                passwordError.classList.remove('hidden');
+                adminPassword.value = '';
+                adminPassword.focus();
+            }
+        } catch (error) {
+            console.error('Authentication error:', error);
+            passwordError.textContent = 'Connection error. Is the server running?';
+            passwordError.classList.remove('hidden');
+        }
+    });
+
+    // Tab switching
+    tabBtns.forEach(btn => {
+        btn.addEventListener('click', () => {
+            const tabName = btn.dataset.tab;
+
+            // Update active tab button
+            tabBtns.forEach(b => b.classList.remove('active'));
+            btn.classList.add('active');
+
+            // Update active tab content
+            if (tabName === 'complaints') {
+                complaintsTab.classList.add('active');
+                feedbackTab.classList.remove('active');
+            } else if (tabName === 'feedback') {
+                complaintsTab.classList.remove('active');
+                feedbackTab.classList.add('active');
+            }
+        });
+    });
+
+    // Load database data
+    async function loadDatabaseData() {
+        try {
+            const response = await fetch('http://127.0.0.1:5000/admin/database');
+            const data = await response.json();
+
+            // Render complaints table
+            renderComplaintsTable(data.complaints);
+
+            // Render feedback table
+            renderFeedbackTable(data.feedback);
+        } catch (error) {
+            console.error('Error loading database:', error);
+        }
+    }
+
+    // Render complaints table
+    function renderComplaintsTable(complaints) {
+        const tbody = document.getElementById('complaints-tbody');
+        tbody.innerHTML = '';
+
+        if (complaints.length === 0) {
+            tbody.innerHTML = '<tr><td colspan="8" style="text-align: center; padding: 2rem; color: var(--text-muted);">No complaints found</td></tr>';
+            return;
+        }
+
+        complaints.forEach(complaint => {
+            const row = document.createElement('tr');
+            row.innerHTML = `
+                <td>${complaint.id}</td>
+                <td>${escapeHtml(complaint.text)}</td>
+                <td>${complaint.predicted_department || '-'}</td>
+                <td>${complaint.department_confidence ? complaint.department_confidence.toFixed(2) : '-'}</td>
+                <td>${complaint.predicted_urgency || '-'}</td>
+                <td>${complaint.urgency_confidence ? complaint.urgency_confidence.toFixed(2) : '-'}</td>
+                <td>${complaint.credibility_score || '-'}</td>
+                <td>${formatTimestamp(complaint.timestamp)}</td>
+            `;
+            tbody.appendChild(row);
+        });
+    }
+
+    // Render feedback table
+    function renderFeedbackTable(feedback) {
+        const tbody = document.getElementById('feedback-tbody');
+        tbody.innerHTML = '';
+
+        if (feedback.length === 0) {
+            tbody.innerHTML = '<tr><td colspan="7" style="text-align: center; padding: 2rem; color: var(--text-muted);">No feedback found</td></tr>';
+            return;
+        }
+
+        feedback.forEach(item => {
+            const row = document.createElement('tr');
+            row.innerHTML = `
+                <td>${item.id}</td>
+                <td>${item.complaint_id}</td>
+                <td>${item.predicted_department || '-'}</td>
+                <td>${item.correct_department || '-'}</td>
+                <td>${item.predicted_urgency || '-'}</td>
+                <td>${item.correct_urgency || '-'}</td>
+                <td>${formatTimestamp(item.timestamp)}</td>
+            `;
+            tbody.appendChild(row);
+        });
+    }
+
+    // Helper function to escape HTML
+    function escapeHtml(text) {
+        const div = document.createElement('div');
+        div.textContent = text;
+        return div.innerHTML;
+    }
+
+    // Helper function to format timestamp
+    function formatTimestamp(timestamp) {
+        if (!timestamp) return '-';
+        const date = new Date(timestamp);
+        return date.toLocaleString('en-IN', {
+            year: 'numeric',
+            month: 'short',
+            day: 'numeric',
+            hour: '2-digit',
+            minute: '2-digit'
+        });
+    }
 });

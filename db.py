@@ -99,6 +99,32 @@ def insert_feedback(complaint_id, predicted_department, correct_department, pred
     conn.commit()
     conn.close()
 
+def get_all_complaints():
+    conn = get_connection()
+    conn.row_factory = sqlite3.Row
+    cursor = conn.cursor()
+    
+    cursor.execute("SELECT * FROM complaints ORDER BY timestamp DESC")
+    rows = cursor.fetchall()
+    
+    complaints = [dict(row) for row in rows]
+    conn.close()
+    
+    return complaints
+
+def get_all_feedback():
+    conn = get_connection()
+    conn.row_factory = sqlite3.Row
+    cursor = conn.cursor()
+    
+    cursor.execute("SELECT * FROM feedback ORDER BY timestamp DESC")
+    rows = cursor.fetchall()
+    
+    feedback = [dict(row) for row in rows]
+    conn.close()
+    
+    return feedback
+
 if __name__ == "__main__":
     init_db()
     print("Database initialized successfully.")

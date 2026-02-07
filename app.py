@@ -2,7 +2,7 @@ from flask import Flask, request, jsonify
 from flask_cors import CORS
 
 from inference import predict_complaint
-from credibility import compute_rule_credibility
+from credibility import compute_rule_credibility, compute_hybrid_credibility
 from questions import generate_followup_questions
 from db import init_db, insert_complaint, insert_feedback
 
@@ -23,7 +23,13 @@ def analyze_complaint():
 
     try:
         inference_result = predict_complaint(text)
-        credibility_score = compute_rule_credibility(text)
+        rule_score = compute_rule_credibility(text)
+
+        credibility_score = compute_hybrid_credibility(
+            rule_score,
+            inference_result["department_confidence"],
+            inference_result["urgency_confidence"]
+        )
 
         if credibility_score < CREDIBILITY_THRESHOLD:
             followup_questions = generate_followup_questions(text)

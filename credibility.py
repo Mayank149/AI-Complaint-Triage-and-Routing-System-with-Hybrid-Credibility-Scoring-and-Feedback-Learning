@@ -77,6 +77,15 @@ def compute_rule_credibility(text):
     #clamping score between 0 and 100
     return max(0, min(100, score))
 
+def compute_hybrid_credibility(rule_score, department_confidence, urgency_confidence, rule_weight = 0.7, ml_weight = 0.3):
+    ml_confidence = (department_confidence + urgency_confidence) / 2
+    ml_score = ml_confidence * 100
+    final_score = (rule_weight * rule_score) + (ml_weight * ml_score)
+
+    final_score = max(0, min(100,round(final_score, 2)))
+    return final_score
+
+
 if __name__ == "__main__":
     sample = (
         "Internet issue in hostel room 204 yesterday evening. "

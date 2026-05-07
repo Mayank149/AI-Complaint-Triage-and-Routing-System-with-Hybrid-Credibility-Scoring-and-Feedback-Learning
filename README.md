@@ -88,8 +88,8 @@ ML Score = ((Department Confidence + Urgency Confidence) / 2) × 100
 
 1. **Clone the repository**
    ```bash
-   git clone <repository-url>
-   cd "AI Complaint Triage and Routing System"
+   git clone https://github.com/Mayank149/AI-Complaint-Triage-and-Routing-System-with-Hybrid-Credibility-Scoring-and-Feedback-Learning
+   cd "AI-Complaint-Triage-and-Routing-System-with-Hybrid-Credibility-Scoring-and-Feedback-Learning"
    ```
 
 2. **Install dependencies**
@@ -205,6 +205,28 @@ Returns all complaints and feedback (admin only).
 - **Smooth Animations**: Fade-in effects and transitions
 - **Color-coded Results**: Visual indicators for credibility levels
 - **Modal Dialogs**: Clean admin authentication and data viewing
+
+---
+
+## 📸 Screenshots
+
+### Main Interface
+![Main Complaint Submission Form](screenshots/main-interface.png)
+
+### Complaint Analysis Results
+![Analysis Results with Credibility Score](screenshots/analysis-results.png)
+
+
+### Follow-up Questions
+![Follow-up Questions Generation](screenshots/followup-questions.png)
+
+
+---
+
+## � Demo GIF
+
+![AI Complaint Triage System Demo](screenshots/demo.gif)
+
 
 ---
 
